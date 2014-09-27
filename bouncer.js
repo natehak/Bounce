@@ -10,8 +10,8 @@ canvas.height = window.innerHeight;
 var image = new Image();
 
 // How many pixels we should shake by
-var velocity = parseInt(getParameterByName("bounceamount"));
-var interval = parseInt(getParameterByName("bouncetime"));
+var velocity = 2;
+var interval = 1;
 
 // Location information
 var locationX;
@@ -38,11 +38,11 @@ function drawFrame() {
     locationY += velocityY;
 
     // If the location is at the edge, bounce!
-    if (locationX >= canvas.width) {
+    if (locationX >= (canvas.width - image.width) || locationX <= 0) {
         velocityX = -1 * velocityX;
     }
 
-    if (locationY >= canvas.height) {
+    if (locationY >= (canvas.height - image.height) || locationY <= 0) {
         velocityY = -1 * velocityY;
     }
 }
@@ -52,7 +52,7 @@ image.onload = function() {
     locationY = 0;
     velocityX = velocity;
     velocityY = velocity;
-	setInterval(drawFrame, shakeTime);
+	setInterval(drawFrame, interval);
 };
 
 image.src = getParameterByName("imagelink");
