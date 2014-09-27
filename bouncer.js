@@ -1,5 +1,5 @@
 // Canvas variables
-var canvas = document.getElementById("shaker");
+var canvas = document.getElementById("bouncer");
 var context = canvas.getContext("2d");
 
 // Constants
