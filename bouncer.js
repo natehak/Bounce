@@ -21,6 +21,10 @@ var locationY;
 var velocityX;
 var velocityY;
 
+// Find scaled width and height
+var scaledWidth;
+var scaledHeight;
+
 function getParameterByName(name) {
 	name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
 	var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
@@ -31,18 +35,18 @@ function getParameterByName(name) {
 function drawFrame() {
 
     // Draw the image
-    context.drawImage(image, locationX, locationY);
+    context.drawImage(image, locationX, locationY, scaledWidth, scaledHeight);
 
     // Move the image
     locationX += velocityX;
     locationY += velocityY;
 
     // If the location is at the edge, bounce!
-    if (locationX >= (canvas.width - image.width) || locationX <= 0) {
+    if (locationX >= (canvas.width - scaledWidth) || locationX <= 0) {
         velocityX = -1 * velocityX;
     }
 
-    if (locationY >= (canvas.height - image.height) || locationY <= 0) {
+    if (locationY >= (canvas.height - scaledHeight) || locationY <= 0) {
         velocityY = -1 * velocityY;
     }
 }
@@ -52,6 +56,8 @@ image.onload = function() {
     locationY = 0;
     velocityX = velocity;
     velocityY = velocity;
+    scaledWidth = canvas.width/5;
+    scaledHeight = scaledWidth * (image.height / image.width);
 	setInterval(drawFrame, interval);
 };
 
