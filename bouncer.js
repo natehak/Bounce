@@ -10,8 +10,8 @@ canvas.height = window.innerHeight;
 var image = new Image();
 
 // How many pixels we should shake by
-var velocity = 2;
 var interval = 1;
+var velocity = interval * 2;
 
 // Location information
 var locationX;
