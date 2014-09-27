@@ -2,34 +2,24 @@
 var canvas = document.getElementById("bouncer");
 var context = canvas.getContext("2d");
 
-// Constants
-var VERTICAL_CORRECTION = -50;
-var HORIZONTAL_CORRECTION = 2;
-
-var WHITE = "#FFFFFF";
-var BLACK = "#000000";
-var FONT = "80px Impact";
-
-var OUTLINE_WIDTH = 4.5;
+// Make canvas the size of the window
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
 
 // Image variables
 var image = new Image();
 
-var sourceX;
-var sourceY;
-var sourceHeight;
-var sourceWidth;
-
 // How many pixels we should shake by
-var shakeAmount = parseInt(getParameterByName("shakeamount"));
-var shakeTime = parseInt(getParameterByName("shaketime"));
+var velocity = parseInt(getParameterByName("bounceamount"));
+var interval = parseInt(getParameterByName("bouncetime"));
 
-// Variables for drawing TEXT
-var bigText = getParameterByName("bigtext");
+// Location information
+var locationX;
+var locationY;
 
-// Right, down, left, up
-var directions = ["right", "down", "left", "up"];
-var i = 0;
+// Velocity information
+var velocityX;
+var velocityY;
 
 function getParameterByName(name) {
 	name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
@@ -40,54 +30,28 @@ function getParameterByName(name) {
 
 function drawFrame() {
 
-	// Shake it baby
-	index = i % directions.length;
-	
-	direction = directions[index];
+    // Draw the image
+    context.drawImage(image, locationX, locationY);
 
-	if (direction == "right") {
-		sourceX += shakeAmount;
-		sourceWidth += shakeAmount;
-	} else if (direction == "down") {
-		sourceY += shakeAmount;
-		sourceHeight += shakeAmount;
-	} else if (direction == "left") {
-		sourceX -= shakeAmount;
-		sourceWidth -= shakeAmount;
-	} else if (direction == "up") {
-		sourceY -= shakeAmount;
-		sourceHeight -= shakeAmount;
-	}
+    // Move the image
+    locationX += velocityX;
+    locationY += velocityY;
 
-	// Draw the image
-	context.fillStyle = WHITE;
-	context.fillRect(0, 0, 3000, 1200);
-	context.drawImage(image, sourceX, sourceY, sourceWidth, sourceHeight);
+    // If the location is at the edge, bounce!
+    if (locationX >= canvas.width) {
+        velocityX = -1 * velocityX;
+    }
 
-	// Draw the text
-	fontX = sourceWidth / HORIZONTAL_CORRECTION;
-	fontY = sourceHeight + VERTICAL_CORRECTION;
-
-	context.font = FONT;
-	context.textAlign = "center";
-
-	context.fillStyle = WHITE;
-	context.fillText(bigText, fontX, fontY);
-
-	context.strokeStyle = BLACK;
-	context.lineWidth = OUTLINE_WIDTH;
-	context.strokeText(bigText, fontX, fontY);
-
-	i++;
+    if (locationY >= canvas.height) {
+        velocityY = -1 * velocityY;
+    }
 }
 
 image.onload = function() {
-	// Variables for cropping
-	sourceX = 0;
-	sourceY = 0;
-	sourceWidth = image.width - shakeAmount;
-	sourceHeight = image.height - shakeAmount;
-
+    locationX = 0;
+    locationY = 0;
+    velocityX = velocity;
+    velocityY = velocity;
 	setInterval(drawFrame, shakeTime);
 };
 
